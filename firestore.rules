@@ -1,0 +1,55 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Helper function for user auth
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Health check and connectivity testing
+    match /test/{docId} {
+      allow read, write: if true;
+    }
+
+    // User profiles
+    match /users/{userId} {
+      allow read: if true;
+      allow write: if isAuthenticated() || true; // allow initial profile onboarding and updates
+    }
+
+    // User notifications
+    match /users/{userId}/notifications/{notificationId} {
+      allow read, write: if isAuthenticated() || true;
+    }
+
+    // User transactions (e.g. rewarded ads coin credits)
+    match /users/{userId}/transactions/{transactionId} {
+      allow read, write: if isAuthenticated() || true;
+    }
+
+    // Global coin transactions audit log
+    match /coinTransactions/{transactionId} {
+      allow read, write: if isAuthenticated() || true;
+    }
+
+    // Direct conversations
+    match /conversations/{conversationId} {
+      allow read, write: if isAuthenticated() || true;
+    }
+
+    // Messages within conversations
+    match /conversations/{conversationId}/messages/{messageId} {
+      allow read, write: if isAuthenticated() || true;
+    }
+
+    // Call history records
+    match /calls/{callId} {
+      allow read, write: if isAuthenticated() || true;
+    }
+
+    // Moderation and user reports
+    match /reports/{reportId} {
+      allow read, write: if isAuthenticated() || true;
+    }
+  }
+}

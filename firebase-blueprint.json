@@ -1,0 +1,177 @@
+{
+  "entities": {
+    "userProfile": {
+      "title": "UserProfile",
+      "description": "User profile information for GlobalMeet members",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "username": { "type": "string" },
+        "name": { "type": "string" },
+        "avatar": { "type": "string" },
+        "age": { "type": "number" },
+        "country": { "type": "string" },
+        "countryCode": { "type": "string" },
+        "language": { "type": "string" },
+        "languagesSpoken": { "type": "array" },
+        "gender": { "type": "string" },
+        "bio": { "type": "string" },
+        "status": { "type": "string" },
+        "coins": { "type": "number" },
+        "accountStatus": { "type": "string" },
+        "joinedAt": { "type": "string" },
+        "isVerified": { "type": "boolean" },
+        "isPremium": { "type": "boolean" }
+      },
+      "required": ["id", "username", "name", "country", "accountStatus"]
+    },
+    "message": {
+      "title": "Message",
+      "description": "Chat message between two users",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "senderId": { "type": "string" },
+        "receiverId": { "type": "string" },
+        "text": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "senderId", "receiverId", "timestamp", "status"]
+    },
+    "conversation": {
+      "title": "Conversation",
+      "description": "Conversation summary between participants",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "participants": { "type": "array" },
+        "lastMessageText": { "type": "string" },
+        "lastMessageTimestamp": { "type": "string" },
+        "unreadCount": { "type": "number" }
+      },
+      "required": ["id", "participants"]
+    },
+    "callRecord": {
+      "title": "CallRecord",
+      "description": "Historical video/audio call logs",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "callerId": { "type": "string" },
+        "receiverId": { "type": "string" },
+        "type": { "type": "string" },
+        "direction": { "type": "string" },
+        "durationSeconds": { "type": "number" },
+        "timestamp": { "type": "string" },
+        "costCoins": { "type": "number" }
+      },
+      "required": ["id", "callerId", "receiverId", "timestamp", "durationSeconds"]
+    },
+    "userReport": {
+      "title": "UserReport",
+      "description": "User violation safety reports",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "reporterId": { "type": "string" },
+        "reporterName": { "type": "string" },
+        "reportedUserId": { "type": "string" },
+        "reportedUserName": { "type": "string" },
+        "category": { "type": "string" },
+        "description": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "status": { "type": "string" }
+      },
+      "required": ["id", "reporterId", "reportedUserId", "category", "timestamp", "status"]
+    },
+    "appNotification": {
+      "title": "AppNotification",
+      "description": "Push and in-app notifications",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "type": { "type": "string" },
+        "title": { "type": "string" },
+        "message": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "read": { "type": "boolean" }
+      },
+      "required": ["id", "userId", "type", "title", "timestamp", "read"]
+    },
+    "connectionTest": {
+      "title": "ConnectionTest",
+      "description": "Doc used to verify client connection to Firestore",
+      "type": "object",
+      "properties": {
+        "status": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["status"]
+    },
+    "coinTransaction": {
+      "title": "CoinTransaction",
+      "description": "Audit record of rewarded ads, premium bonuses, and coins purchase transactions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "amount": { "type": "number" },
+        "previousBalance": { "type": "number" },
+        "newBalance": { "type": "number" },
+        "type": { "type": "string" },
+        "source": { "type": "string" },
+        "paymentAmount": { "type": "number" },
+        "currency": { "type": "string" },
+        "reason": { "type": "string" },
+        "planId": { "type": "string" },
+        "packageId": { "type": "string" },
+        "adPlacement": { "type": "string" },
+        "verificationToken": { "type": "string" },
+        "status": { "type": "string" },
+        "timestamp": { "type": "string" }
+      },
+      "required": ["id", "userId", "amount", "newBalance", "type", "source", "timestamp", "status"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "userProfile",
+      "description": "Collection of user profiles"
+    },
+    "/users/{userId}/transactions/{transactionId}": {
+      "schema": "coinTransaction",
+      "description": "User subcollection of coin and rewarded ad transactions"
+    },
+    "/coinTransactions/{transactionId}": {
+      "schema": "coinTransaction",
+      "description": "Global audit log of coin transactions to prevent duplicate reward grants"
+    },
+    "/conversations/{conversationId}": {
+      "schema": "conversation",
+      "description": "Direct conversation summaries"
+    },
+    "/conversations/{conversationId}/messages/{messageId}": {
+      "schema": "message",
+      "description": "Individual chat messages inside a conversation"
+    },
+    "/calls/{callId}": {
+      "schema": "callRecord",
+      "description": "Records of voice and video calls"
+    },
+    "/reports/{reportId}": {
+      "schema": "userReport",
+      "description": "Safety violation reports submitted by users"
+    },
+    "/users/{userId}/notifications/{notificationId}": {
+      "schema": "appNotification",
+      "description": "In-app notifications for individual users"
+    },
+    "/test/{docId}": {
+      "schema": "connectionTest",
+      "description": "Collection used for boot connectivity check"
+    }
+  }
+}

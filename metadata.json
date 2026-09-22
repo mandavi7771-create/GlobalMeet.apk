@@ -1,0 +1,11 @@
+{
+  "name": "GlobalMeet",
+  "description": "International 18+ social video-chat and messaging platform with country & language discovery, 1-to-1 video calls, coins, and safety controls.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
